@@ -85,7 +85,9 @@ class PanelController {
     this.stage = document.querySelector('.stage');
     this.panels = document.querySelectorAll('.panel');
     this.scrollHint = document.querySelector('.scroll-hint');
+    this.reflectionDelayed = document.querySelector('.reflection-delayed');
     this.currentSection = -1; // Start at -1 so first setActiveSection(0) runs
+    this.reflectionTimeout = null;
 
     // Set initial state
     this.setActiveSection(0);
@@ -128,6 +130,20 @@ class PanelController {
       this.scrollHint.classList.add('is-hidden');
     } else {
       this.scrollHint.classList.remove('is-hidden');
+    }
+
+    // Handle reflection section delayed content
+    if (this.reflectionTimeout) {
+      clearTimeout(this.reflectionTimeout);
+      this.reflectionTimeout = null;
+    }
+
+    if (index === 5) {
+      this.reflectionTimeout = setTimeout(() => {
+        this.reflectionDelayed.classList.add('is-visible');
+      }, 2000);
+    } else {
+      this.reflectionDelayed.classList.remove('is-visible');
     }
   }
 }
