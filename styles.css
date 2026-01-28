@@ -162,6 +162,51 @@ body {
   text-align: left;
 }
 
+/* Epigraphs */
+.epigraph {
+  margin: 0 0 2rem 0;
+  padding: 0;
+  border: none;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.epigraph p {
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.epigraph cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+.epigraph--final {
+  margin-top: 2.5rem;
+  margin-bottom: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(196, 168, 130, 0.2);
+}
+
+.epigraph--final p {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+}
+
+/* Beat - closing lines */
+.beat {
+  margin-top: 1.5rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
 /* Scroll Hint */
 .scroll-hint {
   position: absolute;
@@ -389,6 +434,64 @@ body {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   margin-bottom: 0.5rem;
+}
+
+.credit--author {
+  margin-top: 0.25rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Film Link */
+.film-link {
+  display: block;
+  text-decoration: none;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.film-link:hover {
+  color: var(--color-accent);
+}
+
+.film-link__title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.film-link__year {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin-left: 0.25rem;
+}
+
+/* Watch Button */
+.watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--color-text);
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+
+.watch-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(196, 168, 130, 0.05);
+}
+
+.watch-btn__icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* Ambient Elements */
