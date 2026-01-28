@@ -10,10 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Cinematic Letterbox (persistent) -->
+  <!-- Cinematic Letterbox -->
   <div class="letterbox letterbox--top"></div>
   <div class="letterbox letterbox--bottom"></div>
 
+  <!-- Particles -->
   <canvas id="particles"></canvas>
 
   <!-- Audio Toggle -->
@@ -29,223 +30,106 @@
       <path d="M19.07 4.93a10 10 0 010 14.14"/>
     </svg>
   </button>
-  <div class="scroll-container">
 
-    <!-- Section 1: Opening / Hero -->
-    <section class="scene scene--opening hero" data-scene="opening">
-      <div class="hero__background"></div>
+  <!-- Fixed Stage -->
+  <div class="stage">
+    <!-- Background that transitions -->
+    <div class="stage__bg"></div>
+    <!-- Hero gradient overlay - only visible on hero -->
+    <div class="stage__hero-gradient"></div>
 
-      <!-- Mist layers -->
-      <div class="mist mist--back"></div>
-      <div class="mist mist--mid"></div>
+    <!-- Mist layers -->
+    <div class="mist mist--back"></div>
+    <div class="mist mist--mid"></div>
+    <div class="mist mist--front"></div>
 
-      <!-- Death silhouette in mist -->
-      <svg class="silhouette silhouette--death-hero" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
-        <defs>
-          <linearGradient id="deathFade" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0"/>
-            <stop offset="30%" stop-color="currentColor" stop-opacity="0.08"/>
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0.18"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#deathFade)" d="M100 80 C85 80 75 95 75 110 C75 125 85 135 95 140 L90 180 C60 200 40 280 45 400 L155 400 C160 280 140 200 110 180 L105 140 C115 135 125 125 125 110 C125 95 115 80 100 80"/>
-      </svg>
+    <!-- Content panels - only one visible at a time -->
+    <div class="panel panel--opening is-active" data-section="0">
+      <h1 class="hero__title">
+        <span class="hero__title-line">The Life</span>
+        <span class="hero__title-line hero__title-line--of">of</span>
+        <span class="hero__title-line">Death</span>
+      </h1>
+      <p class="hero__subtitle">A tribute to Marsha Onderstijn</p>
+    </div>
 
-      <!-- Front mist (over death) -->
-      <div class="mist mist--front"></div>
+    <div class="panel panel--encounter" data-section="1">
+      <blockquote class="epigraph">
+        <p>"Because I could not stop for Death – He kindly stopped for me"</p>
+        <cite><a href="https://www.poetryfoundation.org/poems/47652/because-i-could-not-stop-for-death-479" target="_blank" rel="noopener">Emily Dickinson</a></cite>
+      </blockquote>
+      <h2>The Encounter</h2>
+      <p>A small thing, trembling and new.</p>
+      <p>Death kneels. Not to take — but to see.</p>
+      <p>It reaches out, and the flowers blacken at its touch.</p>
+      <p class="beat">Yet it withdraws. Not yet.</p>
+    </div>
 
-      <div class="hero__content">
-        <h1 class="hero__title">
-          <span class="hero__title-line">The Life</span>
-          <span class="hero__title-line hero__title-line--of">of</span>
-          <span class="hero__title-line">Death</span>
-        </h1>
-        <p class="hero__subtitle">A tribute to Marsha Onderstijn</p>
-      </div>
+    <div class="panel panel--waiting" data-section="2">
+      <h2>The Waiting</h2>
+      <p>The fawn grows. Learns to run.</p>
+      <p>Death watches from the treeline.</p>
+      <p>It has nowhere else to be.</p>
+      <p class="beat">Seasons pass. The antlers grow. Death remains.</p>
+    </div>
 
-      <div class="scroll-hint">
-        <span>Scroll</span>
-        <div class="scroll-hint__arrow"></div>
-      </div>
-    </section>
+    <div class="panel panel--near" data-section="3">
+      <blockquote class="epigraph">
+        <p>"You would know the secret of death. But how shall you find it unless you seek it in the heart of life?"</p>
+        <cite><a href="https://www.poetryfoundation.org/poems/58702/on-death-5b2112bb8dd51" target="_blank" rel="noopener">Kahlil Gibran, The Prophet</a></cite>
+      </blockquote>
+      <h2>Always Near</h2>
+      <p>At the edge of the meadow.</p>
+      <p>Behind the last tree before the clearing.</p>
+      <p>Never chasing. Only present.</p>
+      <p class="beat">The deer does not run. Perhaps it knows.</p>
+    </div>
 
-    <!-- Section 2: The Encounter -->
-    <section class="scene scene--encounter" data-scene="encounter">
-      <div class="scene__background"></div>
+    <div class="panel panel--embrace" data-section="4">
+      <h2>The Embrace</h2>
+      <p>The deer lies down in the snow.</p>
+      <p>Death finally crosses the clearing.</p>
+      <p>It kneels once more. This time, it stays.</p>
+      <p class="beat">A hand on weathered fur. The long exhale.</p>
+    </div>
 
-      <!-- Deer silhouette -->
-      <svg class="silhouette silhouette--deer" viewBox="0 0 300 250" preserveAspectRatio="xMidYMax meet">
-        <path fill="currentColor" opacity="0.2" d="M80 100 L75 60 L70 40 L65 60 L68 45 L60 30 L65 50 L60 100 M80 100 Q90 95 100 100 L105 60 L110 40 L115 60 L112 45 L120 30 L115 50 L120 100 M60 100 Q50 110 50 130 Q50 150 60 160 L55 200 L50 230 L60 230 L65 200 L75 210 L80 230 L90 230 L85 200 Q95 195 105 200 L100 230 L110 230 L115 200 L125 210 L130 230 L140 230 L135 200 L130 160 Q140 150 140 130 Q140 110 130 100 Q110 90 90 95 Q70 90 60 100"/>
-      </svg>
+    <div class="panel panel--reflection" data-section="5">
+      <p class="reflection-text">Death was never the enemy.</p>
+      <p class="reflection-text">It was the one who waited longest to say goodbye.</p>
+      <blockquote class="epigraph epigraph--final">
+        <p>"For what is it to die but to stand naked in the wind and to melt into the sun?"</p>
+        <cite><a href="https://www.poetryfoundation.org/poems/58702/on-death-5b2112bb8dd51" target="_blank" rel="noopener">Kahlil Gibran, The Prophet</a></cite>
+      </blockquote>
+      <div class="divider"></div>
+      <p class="credit">Inspired by</p>
+      <a href="https://www.youtube.com/watch?v=ofnCdC8P70g" target="_blank" rel="noopener" class="film-link">
+        <span class="film-link__title">"The Life of Death"</span>
+        <span class="film-link__year">(2012)</span>
+      </a>
+      <p class="credit credit--author">Animation by Marsha Onderstijn</p>
+      <a href="https://www.youtube.com/watch?v=ofnCdC8P70g" target="_blank" rel="noopener" class="watch-btn">
+        <svg class="watch-btn__icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <span>Watch the Film</span>
+      </a>
+    </div>
 
-      <!-- Death watching -->
-      <svg class="silhouette silhouette--death-watching" viewBox="0 0 150 350" preserveAspectRatio="xMidYMax meet">
-        <path fill="currentColor" opacity="0.12" d="M75 50 C60 50 50 65 50 80 C50 95 60 105 70 110 L65 150 C35 170 20 250 25 350 L125 350 C130 250 115 170 85 150 L80 110 C90 105 100 95 100 80 C100 65 90 50 75 50"/>
-      </svg>
+    <!-- Scroll hint -->
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </div>
 
-      <div class="scene__content">
-        <div class="text-block">
-          <blockquote class="epigraph">
-            <p>"Because I could not stop for Death – He kindly stopped for me"</p>
-            <cite><a href="https://www.poetryfoundation.org/poems/47652/because-i-could-not-stop-for-death-479" target="_blank" rel="noopener">Emily Dickinson</a></cite>
-          </blockquote>
-          <h2>The Encounter</h2>
-          <p>A small thing, trembling and new.</p>
-          <p>Death kneels. Not to take — but to see.</p>
-          <p>It reaches out, and the flowers blacken at its touch.</p>
-          <p class="beat">Yet it withdraws. Not yet.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: The Waiting -->
-    <section class="scene scene--waiting" data-scene="waiting">
-      <div class="scene__background"></div>
-
-      <!-- Trees - seasons -->
-      <svg class="silhouette silhouette--trees-left" viewBox="0 0 200 400" preserveAspectRatio="xMinYMax meet">
-        <path fill="currentColor" opacity="0.15" d="M50 400 L50 300 Q30 280 20 250 Q10 220 25 190 Q15 170 20 140 Q25 110 45 100 Q40 80 50 60 Q60 40 80 50 Q90 35 100 50 Q110 40 120 55 Q135 45 140 70 Q160 75 155 100 Q175 110 170 140 Q180 170 165 200 Q180 230 165 260 Q175 290 160 320 L160 400"/>
-      </svg>
-
-      <svg class="silhouette silhouette--trees-right" viewBox="0 0 200 400" preserveAspectRatio="xMaxYMax meet">
-        <path fill="currentColor" opacity="0.12" d="M150 400 L150 320 Q170 300 175 270 Q185 240 170 210 Q185 180 175 150 Q180 120 160 100 Q170 70 150 55 Q140 35 120 50 Q105 30 90 55 Q75 45 70 70 Q50 80 60 110 Q40 130 55 160 Q40 190 55 220 Q35 260 55 300 L55 400"/>
-      </svg>
-
-      <!-- Death beneath tree -->
-      <svg class="silhouette silhouette--death-waiting" viewBox="0 0 120 280" preserveAspectRatio="xMidYMax meet">
-        <path fill="currentColor" opacity="0.1" d="M60 40 C48 40 40 52 40 65 C40 78 48 88 56 92 L52 125 C28 142 15 200 20 280 L100 280 C105 200 92 142 68 125 L64 92 C72 88 80 78 80 65 C80 52 72 40 60 40"/>
-      </svg>
-
-      <div class="scene__content">
-        <div class="text-block">
-          <h2>The Waiting</h2>
-          <p>The fawn grows. Learns to run.</p>
-          <p>Death watches from the treeline.</p>
-          <p>It has nowhere else to be.</p>
-          <p class="beat">Seasons pass. The antlers grow. Death remains.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: Always Near -->
-    <section class="scene scene--near" data-scene="near">
-      <div class="scene__background"></div>
-
-      <!-- Deer grazing peacefully -->
-      <svg class="silhouette silhouette--deer-grazing" viewBox="0 0 320 200" preserveAspectRatio="xMinYMax meet">
-        <path fill="currentColor" opacity="0.18" d="M60 120 Q50 110 45 95 Q40 80 50 70 L45 50 L40 35 L50 55 L55 40 L60 60 L65 70 Q75 65 85 70 L90 60 L95 40 L100 55 L105 35 L100 50 L95 70 Q105 80 100 95 Q95 110 85 120 L80 160 L75 190 L85 190 L90 160 L100 170 L110 190 L120 190 L110 160 Q125 150 140 160 L130 190 L140 190 L150 170 L160 160 L165 190 L175 190 L170 160 L175 120 Q185 110 180 95 Q175 80 160 75 Q140 70 120 75 Q100 70 80 80 Q60 90 60 120"/>
-      </svg>
-
-      <!-- Death at edge, barely visible -->
-      <svg class="silhouette silhouette--death-edge" viewBox="0 0 100 300" preserveAspectRatio="xMaxYMax meet">
-        <defs>
-          <linearGradient id="edgeFade" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0"/>
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0.15"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#edgeFade)" d="M50 35 C40 35 33 45 33 57 C33 69 40 77 47 80 L43 108 C20 122 10 180 14 300 L86 300 C90 180 80 122 57 108 L53 80 C60 77 67 69 67 57 C67 45 60 35 50 35"/>
-      </svg>
-
-      <!-- Falling leaves -->
-      <svg class="silhouette silhouette--leaves" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-        <g fill="currentColor" opacity="0.1">
-          <ellipse cx="50" cy="80" rx="8" ry="4" transform="rotate(25 50 80)"/>
-          <ellipse cx="120" cy="150" rx="6" ry="3" transform="rotate(-15 120 150)"/>
-          <ellipse cx="280" cy="100" rx="7" ry="3.5" transform="rotate(40 280 100)"/>
-          <ellipse cx="350" cy="200" rx="5" ry="2.5" transform="rotate(-30 350 200)"/>
-          <ellipse cx="180" cy="280" rx="8" ry="4" transform="rotate(15 180 280)"/>
-          <ellipse cx="320" cy="320" rx="6" ry="3" transform="rotate(-20 320 320)"/>
-          <ellipse cx="80" cy="350" rx="7" ry="3.5" transform="rotate(35 80 350)"/>
-        </g>
-      </svg>
-
-      <div class="scene__content">
-        <div class="text-block">
-          <blockquote class="epigraph">
-            <p>"You would know the secret of death. But how shall you find it unless you seek it in the heart of life?"</p>
-            <cite><a href="https://www.poetryfoundation.org/poems/58702/on-death-5b2112bb8dd51" target="_blank" rel="noopener">Kahlil Gibran, The Prophet</a></cite>
-          </blockquote>
-          <h2>Always Near</h2>
-          <p>At the edge of the meadow.</p>
-          <p>Behind the last tree before the clearing.</p>
-          <p>Never chasing. Only present.</p>
-          <p class="beat">The deer does not run. Perhaps it knows.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: The Embrace -->
-    <section class="scene scene--embrace" data-scene="embrace">
-      <div class="scene__background"></div>
-
-      <!-- Death embracing deer -->
-      <svg class="silhouette silhouette--embrace" viewBox="0 0 400 350" preserveAspectRatio="xMidYMax meet">
-        <defs>
-          <radialGradient id="embraceGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0.08"/>
-          </radialGradient>
-        </defs>
-        <!-- Death figure, leaning down -->
-        <path fill="url(#embraceGlow)" d="M180 60 C165 60 155 75 155 90 C155 105 165 115 175 120 L160 160 C150 170 145 185 150 200 L120 210 Q100 220 110 240 L140 235 L145 280 C120 300 110 340 115 350 L200 350 C200 320 190 290 175 275 L180 235 Q200 230 220 240 L225 280 C210 295 205 330 210 350 L280 350 C285 310 270 280 250 260 L255 220 Q270 210 260 195 L230 190 C225 175 215 165 200 160 L185 120 C195 115 205 105 205 90 C205 75 195 60 180 60"/>
-        <!-- Deer lying down -->
-        <path fill="currentColor" opacity="0.2" d="M240 280 Q250 270 260 275 L265 260 L270 250 L275 265 L280 255 L278 270 Q290 275 285 290 Q295 300 285 315 L290 340 L295 350 L280 350 L275 335 L265 340 L260 350 L245 350 L250 335 Q235 330 225 340 L220 350 L205 350 L210 335 L200 340 L195 350 L180 350 L190 330 Q175 315 185 295 Q175 280 190 270 Q210 260 230 270 Q235 275 240 280"/>
-      </svg>
-
-      <div class="scene__content">
-        <div class="text-block">
-          <h2>The Embrace</h2>
-          <p>The deer lies down in the snow.</p>
-          <p>Death finally crosses the clearing.</p>
-          <p>It kneels once more. This time, it stays.</p>
-          <p class="beat">A hand on weathered fur. The long exhale.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 6: Reflection -->
-    <section class="scene scene--reflection" data-scene="reflection">
-      <div class="scene__background"></div>
-
-      <!-- Ascending spirit/light -->
-      <svg class="silhouette silhouette--spirit" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
-        <defs>
-          <linearGradient id="spiritRise" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.2"/>
-            <stop offset="50%" stop-color="currentColor" stop-opacity="0.1"/>
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <ellipse cx="100" cy="350" rx="40" ry="15" fill="currentColor" opacity="0.1"/>
-        <path fill="url(#spiritRise)" d="M100 380 Q70 350 75 300 Q65 250 80 200 Q70 150 85 100 Q80 50 100 20 Q120 50 115 100 Q130 150 120 200 Q135 250 125 300 Q130 350 100 380"/>
-      </svg>
-
-      <div class="scene__content">
-        <div class="text-block text-block--centered">
-          <p class="reflection-text">Death was never the enemy.</p>
-          <p class="reflection-text">It was the one who waited longest to say goodbye.</p>
-          <blockquote class="epigraph epigraph--final">
-            <p>"For what is it to die but to stand naked in the wind and to melt into the sun?"</p>
-            <cite><a href="https://www.poetryfoundation.org/poems/58702/on-death-5b2112bb8dd51" target="_blank" rel="noopener">Kahlil Gibran, The Prophet</a></cite>
-          </blockquote>
-          <div class="divider"></div>
-          <p class="credit">Inspired by</p>
-          <a href="https://www.youtube.com/watch?v=ofnCdC8P70g" target="_blank" rel="noopener" class="film-link">
-            <span class="film-link__title">"The Life of Death"</span>
-            <span class="film-link__year">(2012)</span>
-          </a>
-          <p class="credit credit--author">Animation by Marsha Onderstijn</p>
-          <a href="https://www.youtube.com/watch?v=ofnCdC8P70g" target="_blank" rel="noopener" class="watch-btn">
-            <svg class="watch-btn__icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-            <span>Watch the Film</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
+  <!-- Invisible scroll track -->
+  <div class="scroll-track">
+    <div class="scroll-track__section" data-section="0"></div>
+    <div class="scroll-track__section" data-section="1"></div>
+    <div class="scroll-track__section" data-section="2"></div>
+    <div class="scroll-track__section" data-section="3"></div>
+    <div class="scroll-track__section" data-section="4"></div>
+    <div class="scroll-track__section" data-section="5"></div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

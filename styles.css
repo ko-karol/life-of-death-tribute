@@ -6,25 +6,17 @@
 }
 
 :root {
-  --color-bg-dark: #1a1612;
-  --color-bg-warm: #2d2520;
-  --color-bg-muted: #3d352e;
-  --color-text: #e8e0d5;
-  --color-text-muted: #a89f94;
-  --color-accent: #c4a882;
+  --color-bg-dark: oklch(7% 0.01 55);
+  --color-bg-warm: oklch(20% 0.02 55);
+  --color-bg-muted: oklch(27% 0.025 55);
+  --color-text: oklch(90% 0.015 80);
+  --color-text-muted: oklch(68% 0.02 65);
+  --color-accent: oklch(74% 0.08 70);
   --font-main: 'Cormorant Garamond', Georgia, serif;
 }
 
-html,
-html:focus-within {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html,
-  html:focus-within {
-    scroll-behavior: auto;
-  }
+html {
+  height: 100%;
 }
 
 body {
@@ -32,6 +24,7 @@ body {
   background-color: var(--color-bg-dark);
   color: var(--color-text);
   line-height: 1.8;
+  height: 100%;
   overflow-x: hidden;
 }
 
@@ -44,11 +37,11 @@ body {
   height: 48px;
   border-radius: 50%;
   border: 1px solid var(--color-text-muted);
-  background: rgba(26, 22, 18, 0.8);
+  background: oklch(7% 0.01 55 / 0.8);
   backdrop-filter: blur(10px);
   color: var(--color-text-muted);
   cursor: pointer;
-  z-index: 100;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,58 +88,140 @@ body {
   z-index: 10;
 }
 
-/* Scroll Container */
-.scroll-container {
-  width: 100%;
+/* Cinematic Letterbox */
+.letterbox {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  z-index: 150;
+  pointer-events: none;
 }
 
-/* Scene Base */
-.scene {
-  position: relative;
-  min-height: 100vh;
+.letterbox--top {
+  top: 0;
+  background: linear-gradient(to bottom, oklch(0% 0 0) 0%, oklch(0% 0 0) 60%, transparent 100%);
+}
+
+.letterbox--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, oklch(0% 0 0) 0%, oklch(0% 0 0) 60%, transparent 100%);
+}
+
+/* Fixed Stage - always visible */
+.stage {
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-.scene__background {
+.stage__bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  opacity: 0.6;
+  background: oklch(12% 0.015 55);
+  transition: background 1.5s ease;
 }
 
-.scene__content {
-  position: relative;
-  z-index: 1;
-  max-width: 800px;
-  padding: 2rem;
+/* Hero gradient overlay - fades out on other sections */
+.stage__hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, oklch(18% 0.025 55) 0%, transparent 70%);
+  transition: opacity 1s ease;
+}
+
+/* Section backgrounds - consistent warm brown */
+.stage[data-active-section="1"] .stage__bg,
+.stage[data-active-section="2"] .stage__bg,
+.stage[data-active-section="3"] .stage__bg,
+.stage[data-active-section="4"] .stage__bg {
+  background: oklch(18% 0.02 55);
+}
+
+/* Ending section - same as hero */
+.stage[data-active-section="5"] .stage__bg {
+  background: oklch(12% 0.015 55);
+}
+
+/* Mist layers - only visible on hero section */
+.mist {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.mist--back {
+  background:
+    radial-gradient(ellipse 100% 50% at 20% 95%, oklch(75% 0.02 70 / 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 50% at 80% 90%, oklch(75% 0.02 70 / 0.1) 0%, transparent 50%);
+  animation: mistDrift 30s ease-in-out infinite alternate;
+}
+
+.mist--mid {
+  background:
+    radial-gradient(ellipse 90% 40% at 50% 100%, oklch(80% 0.02 75 / 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 35% at 25% 95%, oklch(75% 0.02 70 / 0.14) 0%, transparent 50%);
+  animation: mistDrift 24s ease-in-out infinite alternate-reverse;
+}
+
+.mist--front {
+  background:
+    radial-gradient(ellipse 130% 45% at 50% 105%, oklch(80% 0.02 75 / 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 30% at 75% 100%, oklch(85% 0.015 80 / 0.15) 0%, transparent 40%);
+  animation: mistDrift 18s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+/* Hide mist and gradient on middle sections (not hero or ending) */
+.stage[data-active-section="1"] .mist,
+.stage[data-active-section="2"] .mist,
+.stage[data-active-section="3"] .mist,
+.stage[data-active-section="4"] .mist,
+.stage[data-active-section="1"] .stage__hero-gradient,
+.stage[data-active-section="2"] .stage__hero-gradient,
+.stage[data-active-section="3"] .stage__hero-gradient,
+.stage[data-active-section="4"] .stage__hero-gradient {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+@keyframes mistDrift {
+  0% {
+    transform: translateX(-2%) translateY(0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(2%) translateY(-1%);
+    opacity: 1;
+  }
+}
+
+/* Content Panels */
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-}
-
-/* Typography */
-.title {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
+  padding: 2rem;
+  z-index: 20;
   opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
 }
 
-.subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--color-text-muted);
-  opacity: 0;
+.panel.is-active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.text-block {
-  opacity: 0;
-}
-
-.text-block h2 {
+.panel h2 {
   font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 300;
   letter-spacing: 0.05em;
@@ -154,20 +229,40 @@ body {
   color: var(--color-accent);
 }
 
-.text-block p {
+.panel p {
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
   margin-bottom: 1rem;
   font-weight: 300;
+  max-width: 600px;
 }
 
-.text-block .quote {
-  margin-top: 2.5rem;
+/* Hero title */
+.hero__title {
+  font-size: clamp(2rem, 10vw, 6rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+.hero__title-line {
+  display: block;
+}
+
+.hero__title-line--of {
+  font-size: 0.4em;
+  font-style: italic;
+  letter-spacing: 0.3em;
+  color: var(--color-text-muted);
+  margin: 0.5em 0;
+}
+
+.hero__subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 300;
   font-style: italic;
   color: var(--color-text-muted);
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  padding: 0 1rem;
-  border-left: 2px solid var(--color-accent);
-  text-align: left;
+  letter-spacing: 0.2em;
 }
 
 /* Epigraphs */
@@ -202,8 +297,6 @@ body {
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease, color 0.3s ease;
-  position: relative;
-  z-index: 101;
 }
 
 .epigraph cite a:hover {
@@ -215,7 +308,7 @@ body {
   margin-top: 2.5rem;
   margin-bottom: 0;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(196, 168, 130, 0.2);
+  border-top: 1px solid oklch(74% 0.08 70 / 0.2);
 }
 
 .epigraph--final p {
@@ -229,215 +322,7 @@ body {
   color: var(--color-text-muted);
 }
 
-/* Scroll Hint */
-.scroll-hint {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0;
-}
-
-.scroll-hint span {
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text);
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-}
-
-.scroll-hint__arrow {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--color-text-muted), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@keyframes scrollPulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scaleY(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scaleY(1.2);
-  }
-}
-
-/* Hero Section */
-.hero {
-  background: #0a0908;
-  overflow: hidden;
-}
-
-.hero__background {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 50% at 50% 100%, #1a1510 0%, #0a0908 70%);
-}
-
-/* Cinematic Letterbox (persistent) */
-.letterbox {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 12vh;
-  background: #000;
-  z-index: 100;
-  pointer-events: none;
-}
-
-.letterbox--top {
-  top: 0;
-}
-
-.letterbox--bottom {
-  bottom: 0;
-}
-
-/* Mist layers */
-.mist {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.mist--back {
-  background:
-    radial-gradient(ellipse 100% 50% at 20% 95%, rgba(180, 170, 155, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 50% at 80% 90%, rgba(180, 170, 155, 0.1) 0%, transparent 50%);
-  animation: mistDrift 30s ease-in-out infinite alternate;
-}
-
-.mist--mid {
-  background:
-    radial-gradient(ellipse 90% 40% at 50% 100%, rgba(200, 190, 175, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 35% at 25% 95%, rgba(180, 170, 155, 0.14) 0%, transparent 50%);
-  animation: mistDrift 24s ease-in-out infinite alternate-reverse;
-}
-
-.mist--front {
-  background:
-    radial-gradient(ellipse 130% 45% at 50% 105%, rgba(200, 190, 175, 0.22) 0%, transparent 50%),
-    radial-gradient(ellipse 90% 30% at 75% 100%, rgba(220, 210, 195, 0.15) 0%, transparent 40%);
-  animation: mistDrift 18s ease-in-out infinite alternate;
-  z-index: 5;
-}
-
-@keyframes mistDrift {
-  0% {
-    transform: translateX(-2%) translateY(0);
-    opacity: 0.85;
-  }
-  100% {
-    transform: translateX(2%) translateY(-1%);
-    opacity: 1;
-  }
-}
-
-/* Hero Death Silhouette */
-.silhouette--death-hero {
-  position: absolute;
-  bottom: 12vh;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 180px;
-  height: auto;
-  z-index: 2;
-  opacity: 0;
-}
-
-/* Hero Content */
-.hero__content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  padding: 2rem;
-}
-
-.hero__title {
-  font-size: clamp(2rem, 10vw, 6rem);
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  line-height: 1.1;
-  margin-bottom: 2rem;
-}
-
-.hero__title-line {
-  display: block;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.hero__title-line--of {
-  font-size: 0.4em;
-  font-style: italic;
-  letter-spacing: 0.3em;
-  color: var(--color-text-muted);
-  margin: 0.5em 0;
-}
-
-.hero__subtitle {
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--color-text-muted);
-  letter-spacing: 0.2em;
-  opacity: 0;
-}
-
-/* Scroll hint repositioned for letterbox */
-.scroll-hint {
-  bottom: calc(12vh + 1.5rem);
-  z-index: 25;
-}
-
-/* Scene Backgrounds */
-.scene--opening {
-  background: linear-gradient(135deg, var(--color-bg-dark) 0%, #252019 100%);
-}
-
-.scene--encounter {
-  background: linear-gradient(180deg, #252019 0%, var(--color-bg-warm) 100%);
-}
-
-.scene--waiting {
-  background: linear-gradient(180deg, var(--color-bg-warm) 0%, #352d26 100%);
-}
-
-.scene--near {
-  background: linear-gradient(180deg, #352d26 0%, var(--color-bg-muted) 100%);
-}
-
-.scene--embrace {
-  background: linear-gradient(180deg, var(--color-bg-muted) 0%, #2a2420 100%);
-}
-
-.scene--reflection {
-  background: linear-gradient(180deg, #2a2420 0%, var(--color-bg-dark) 100%);
-  min-height: 100vh;
-}
-
 /* Reflection Section */
-.text-block--centered {
-  text-align: center;
-}
-
 .reflection-text {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-style: italic;
@@ -470,8 +355,6 @@ body {
   color: var(--color-text);
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
-  position: relative;
-  z-index: 101;
 }
 
 .film-link:hover {
@@ -505,14 +388,12 @@ body {
   font-size: 0.95rem;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
-  position: relative;
-  z-index: 101;
 }
 
 .watch-btn:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  background: rgba(196, 168, 130, 0.05);
+  background: oklch(74% 0.08 70 / 0.05);
 }
 
 .watch-btn__icon {
@@ -520,135 +401,65 @@ body {
   height: 18px;
 }
 
-/* Ambient Elements */
-.scene::before {
-  content: '';
+/* Scroll Hint */
+.scroll-hint {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(ellipse at center, transparent 0%, var(--color-bg-dark) 70%);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* Silhouettes */
-.silhouette {
-  position: absolute;
-  pointer-events: none;
-  color: var(--color-text);
-  z-index: 0;
-}
-
-.silhouette--death-distant {
-  bottom: 0;
+  bottom: calc(12vh + 1.5rem);
   left: 50%;
   transform: translateX(-50%);
-  width: 150px;
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 25;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.scroll-hint.is-hidden {
   opacity: 0;
 }
 
-.silhouette--deer {
-  bottom: 5%;
-  left: 10%;
-  width: 180px;
-  height: auto;
+.scroll-hint span {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-shadow: 0 0 20px oklch(0% 0 0 / 0.8);
 }
 
-.silhouette--death-watching {
-  bottom: 0;
-  right: 12%;
-  width: 100px;
-  height: auto;
+.scroll-hint__arrow {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--color-text-muted), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
 }
 
-.silhouette--trees-left {
-  bottom: 0;
-  left: 0;
-  width: 25%;
-  max-width: 200px;
-  height: auto;
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.2);
+  }
 }
 
-.silhouette--trees-right {
-  bottom: 0;
-  right: 0;
-  width: 25%;
-  max-width: 200px;
-  height: auto;
+/* Invisible Scroll Track */
+.scroll-track {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.silhouette--death-waiting {
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: auto;
-}
-
-.silhouette--deer-grazing {
-  bottom: 10%;
-  left: 5%;
-  width: 200px;
-  height: auto;
-}
-
-.silhouette--death-edge {
-  bottom: 0;
-  right: 0;
-  width: 120px;
-  height: auto;
-}
-
-.silhouette--leaves {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.silhouette--embrace {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  max-width: 80%;
-  height: auto;
-}
-
-.silhouette--spirit {
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: auto;
+.scroll-track__section {
+  height: 100vh;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .scene__content {
+  .panel {
     padding: 1.5rem;
-  }
-
-  .text-block .quote {
-    padding: 0 0.5rem;
-  }
-
-  .silhouette--deer,
-  .silhouette--death-watching,
-  .silhouette--deer-grazing,
-  .silhouette--death-edge {
-    opacity: 0.5;
-  }
-
-  .silhouette--trees-left,
-  .silhouette--trees-right {
-    width: 30%;
-  }
-
-  .silhouette--embrace {
-    width: 250px;
   }
 }

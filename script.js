@@ -42,17 +42,14 @@ class ParticleSystem {
 
   update() {
     this.particles.forEach((p, index) => {
-      // Gentle upward float with horizontal drift
       p.drift += p.driftSpeed;
       p.x += p.speedX + Math.sin(p.drift) * 0.3;
       p.y += p.speedY;
 
-      // Reset particle when it goes off screen
       if (p.y < -10) {
         this.particles[index] = this.createParticle(true);
       }
 
-      // Wrap horizontally
       if (p.x < -10) p.x = this.canvas.width + 10;
       if (p.x > this.canvas.width + 10) p.x = -10;
     });
@@ -82,297 +79,57 @@ if (particleCanvas) {
   new ParticleSystem(particleCanvas);
 }
 
-// Initialize animations
-function initAnimations() {
-  // Hero reveal animation
-  initHeroAnimation();
+// Panel Controller
+class PanelController {
+  constructor() {
+    this.stage = document.querySelector('.stage');
+    this.panels = document.querySelectorAll('.panel');
+    this.scrollHint = document.querySelector('.scroll-hint');
+    this.currentSection = -1; // Start at -1 so first setActiveSection(0) runs
 
-  // Fade out hero on scroll
-  gsap.to('.hero__content', {
-    opacity: 0,
-    y: -80,
-    scrollTrigger: {
-      trigger: '.hero',
-      start: '20% top',
-      end: '80% top',
-      scrub: true,
-    }
-  });
+    // Set initial state
+    this.setActiveSection(0);
+    this.initScrollTriggers();
+  }
 
+  initScrollTriggers() {
+    const sections = document.querySelectorAll('.scroll-track__section');
 
-  // Death silhouette reveal and parallax
-  gsap.to('.silhouette--death-hero', {
-    opacity: 1,
-    y: -30,
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: '60% top',
-      scrub: true,
-    }
-  });
-
-  // Text blocks fade in for each scene
-  const scenes = [
-    '.scene--encounter',
-    '.scene--waiting',
-    '.scene--near',
-    '.scene--embrace',
-    '.scene--reflection'
-  ];
-
-  scenes.forEach((scene) => {
-    const textBlock = document.querySelector(`${scene} .text-block`);
-    if (!textBlock) return;
-
-    // Main text block fade in
-    gsap.to(textBlock, {
-      opacity: 1,
-      scrollTrigger: {
-        trigger: scene,
+    sections.forEach((section, index) => {
+      ScrollTrigger.create({
+        trigger: section,
         start: 'top center',
-        end: 'center center',
-        scrub: true,
-      }
-    });
-
-    // Parallax effect on text
-    gsap.to(textBlock, {
-      y: -30,
-      scrollTrigger: {
-        trigger: scene,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
-      }
-    });
-
-    // Stagger paragraphs
-    const paragraphs = textBlock.querySelectorAll('p, h2');
-    paragraphs.forEach((p, index) => {
-      gsap.from(p, {
-        opacity: 0,
-        y: 30,
-        scrollTrigger: {
-          trigger: scene,
-          start: `top+=${index * 50} center`,
-          end: `top+=${index * 50 + 100} center`,
-          scrub: true,
-        }
+        end: 'bottom center',
+        onEnter: () => this.setActiveSection(index),
+        onEnterBack: () => this.setActiveSection(index),
       });
     });
-  });
+  }
 
-  // Special animation for reflection text
-  const reflectionTexts = document.querySelectorAll('.reflection-text');
-  reflectionTexts.forEach((text, index) => {
-    gsap.from(text, {
-      opacity: 0,
-      y: 40,
-      scrollTrigger: {
-        trigger: '.scene--reflection',
-        start: `top+=${index * 100} center`,
-        end: `top+=${index * 100 + 150} center`,
-        scrub: true,
+  setActiveSection(index) {
+    if (index === this.currentSection) return;
+
+    this.currentSection = index;
+
+    // Update stage background
+    this.stage.setAttribute('data-active-section', index);
+
+    // Switch panels
+    this.panels.forEach((panel, i) => {
+      if (i === index) {
+        panel.classList.add('is-active');
+      } else {
+        panel.classList.remove('is-active');
       }
     });
-  });
 
-  // Divider animation
-  gsap.from('.divider', {
-    scaleX: 0,
-    scrollTrigger: {
-      trigger: '.divider',
-      start: 'top 80%',
-      end: 'top 60%',
-      scrub: true,
+    // Hide scroll hint after first section
+    if (index > 0) {
+      this.scrollHint.classList.add('is-hidden');
+    } else {
+      this.scrollHint.classList.remove('is-hidden');
     }
-  });
-
-  // Credits fade in
-  gsap.from('.credit', {
-    opacity: 0,
-    stagger: 0.2,
-    scrollTrigger: {
-      trigger: '.credit',
-      start: 'top 85%',
-      toggleActions: 'play none none reverse'
-    }
-  });
-
-  // Ambient background movement
-  document.querySelectorAll('.scene__background').forEach((bg) => {
-    gsap.to(bg, {
-      y: -50,
-      scrollTrigger: {
-        trigger: bg.parentElement,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
-      }
-    });
-  });
-
-  // Silhouette animations
-  initSilhouetteAnimations();
-}
-
-function initHeroAnimation() {
-  const heroTl = gsap.timeline({ delay: 1.2 });
-
-  heroTl
-    // Title lines emerge from mist - slow, contemplative
-    .to('.hero__title-line', {
-      opacity: 1,
-      y: 0,
-      duration: 2.4,
-      stagger: 0.7,
-      ease: 'power2.out'
-    })
-    // Subtitle fades in after title settles
-    .to('.hero__subtitle', {
-      opacity: 1,
-      duration: 2,
-      ease: 'power1.out'
-    }, '-=0.5')
-    // Death silhouette emerges very slowly
-    .to('.silhouette--death-hero', {
-      opacity: 0.35,
-      duration: 4,
-      ease: 'power1.out'
-    }, '-=3')
-    // Scroll hint appears last
-    .to('.scroll-hint', {
-      opacity: 1,
-      duration: 1.5,
-      ease: 'power1.out'
-    }, '-=1');
-}
-
-function initSilhouetteAnimations() {
-
-  // Encounter - Deer and Death parallax
-  gsap.from('.silhouette--deer', {
-    x: -50,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: '.scene--encounter',
-      start: 'top 80%',
-      end: 'top 20%',
-      scrub: true,
-    }
-  });
-
-  gsap.from('.silhouette--death-watching', {
-    x: 50,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: '.scene--encounter',
-      start: 'top 60%',
-      end: 'top 10%',
-      scrub: true,
-    }
-  });
-
-  // Waiting - Trees parallax at different speeds
-  gsap.to('.silhouette--trees-left', {
-    y: -80,
-    scrollTrigger: {
-      trigger: '.scene--waiting',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
-
-  gsap.to('.silhouette--trees-right', {
-    y: -50,
-    scrollTrigger: {
-      trigger: '.scene--waiting',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
-
-  gsap.from('.silhouette--death-waiting', {
-    opacity: 0,
-    scale: 0.9,
-    scrollTrigger: {
-      trigger: '.scene--waiting',
-      start: 'top 40%',
-      end: 'center center',
-      scrub: true,
-    }
-  });
-
-  // Near - Deer grazing, death at edge
-  gsap.to('.silhouette--deer-grazing', {
-    x: 30,
-    scrollTrigger: {
-      trigger: '.scene--near',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
-
-  gsap.from('.silhouette--death-edge', {
-    x: 100,
-    scrollTrigger: {
-      trigger: '.scene--near',
-      start: 'top 60%',
-      end: 'center center',
-      scrub: true,
-    }
-  });
-
-  // Leaves gentle drift
-  gsap.to('.silhouette--leaves', {
-    y: -100,
-    x: 30,
-    rotation: 5,
-    scrollTrigger: {
-      trigger: '.scene--near',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
-
-  // Embrace - figures fade in together
-  gsap.from('.silhouette--embrace', {
-    opacity: 0,
-    scale: 0.95,
-    scrollTrigger: {
-      trigger: '.scene--embrace',
-      start: 'top 60%',
-      end: 'top 20%',
-      scrub: true,
-    }
-  });
-
-  // Reflection - spirit rises
-  gsap.from('.silhouette--spirit', {
-    y: 50,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: '.scene--reflection',
-      start: 'top 60%',
-      end: 'center center',
-      scrub: true,
-    }
-  });
-
-  gsap.to('.silhouette--spirit', {
-    y: -100,
-    scrollTrigger: {
-      trigger: '.scene--reflection',
-      start: 'center center',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
+  }
 }
 
 // Audio System
@@ -384,14 +141,13 @@ class AmbientAudio {
     this.oscillators = [];
     this.currentSection = 0;
 
-    // Sound profiles for each section (frequencies and characteristics)
     this.sections = [
-      { baseFreq: 55, volume: 0.12, detune: 0 },      // Opening - low, mysterious
-      { baseFreq: 65, volume: 0.14, detune: 5 },      // Encounter - slightly warmer
-      { baseFreq: 60, volume: 0.13, detune: -5 },     // Waiting - patient, steady
-      { baseFreq: 70, volume: 0.15, detune: 10 },     // Near - subtle tension
-      { baseFreq: 50, volume: 0.16, detune: 0 },      // Embrace - deep, peaceful
-      { baseFreq: 80, volume: 0.10, detune: 15 },     // Reflection - ascending, fading
+      { baseFreq: 55, volume: 0.12, detune: 0 },
+      { baseFreq: 65, volume: 0.14, detune: 5 },
+      { baseFreq: 60, volume: 0.13, detune: -5 },
+      { baseFreq: 70, volume: 0.15, detune: 10 },
+      { baseFreq: 50, volume: 0.16, detune: 0 },
+      { baseFreq: 80, volume: 0.10, detune: 15 },
     ];
 
     this.button = document.getElementById('audioToggle');
@@ -403,41 +159,34 @@ class AmbientAudio {
   initAudioContext() {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Master gain
     this.masterGain = this.audioContext.createGain();
     this.masterGain.gain.value = 0;
     this.masterGain.connect(this.audioContext.destination);
 
-    // Create layered drone
     this.createDrone();
   }
 
   createDrone() {
     const config = this.sections[this.currentSection];
 
-    // Clear existing oscillators
     this.oscillators.forEach(osc => {
       try { osc.stop(); } catch(e) {}
     });
     this.oscillators = [];
 
-    // Base tone
     const osc1 = this.audioContext.createOscillator();
     osc1.type = 'sine';
     osc1.frequency.value = config.baseFreq;
 
-    // Harmonic layer
     const osc2 = this.audioContext.createOscillator();
     osc2.type = 'sine';
     osc2.frequency.value = config.baseFreq * 1.5;
     osc2.detune.value = config.detune;
 
-    // Sub layer
     const osc3 = this.audioContext.createOscillator();
     osc3.type = 'sine';
     osc3.frequency.value = config.baseFreq * 0.5;
 
-    // Individual gains
     const gain1 = this.audioContext.createGain();
     gain1.gain.value = 0.5;
 
@@ -447,12 +196,10 @@ class AmbientAudio {
     const gain3 = this.audioContext.createGain();
     gain3.gain.value = 0.3;
 
-    // Connect
     osc1.connect(gain1).connect(this.masterGain);
     osc2.connect(gain2).connect(this.masterGain);
     osc3.connect(gain3).connect(this.masterGain);
 
-    // Start
     osc1.start();
     osc2.start();
     osc3.start();
@@ -462,11 +209,11 @@ class AmbientAudio {
   }
 
   initScrollDetection() {
-    const scenes = document.querySelectorAll('.scene');
+    const sections = document.querySelectorAll('.scroll-track__section');
 
-    scenes.forEach((scene, index) => {
+    sections.forEach((section, index) => {
       ScrollTrigger.create({
-        trigger: scene,
+        trigger: section,
         start: 'top center',
         end: 'bottom center',
         onEnter: () => this.transitionTo(index),
@@ -483,7 +230,6 @@ class AmbientAudio {
     const config = this.sections[sectionIndex];
     const time = this.audioContext.currentTime;
 
-    // Smoothly transition frequencies and volume
     if (this.oscillators.length >= 3) {
       this.oscillators[0].frequency.linearRampToValueAtTime(config.baseFreq, time + 2);
       this.oscillators[1].frequency.linearRampToValueAtTime(config.baseFreq * 1.5, time + 2);
@@ -539,7 +285,7 @@ class AmbientAudio {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  initAnimations();
+  new PanelController();
   new AmbientAudio();
 });
 
