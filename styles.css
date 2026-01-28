@@ -202,6 +202,8 @@ body {
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  z-index: 101;
 }
 
 .epigraph cite a:hover {
@@ -238,14 +240,14 @@ body {
   align-items: center;
   gap: 0.5rem;
   opacity: 0;
-  animation: fadeInUp 1s ease 2s forwards;
 }
 
 .scroll-hint span {
-  font-size: 0.875rem;
-  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text);
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .scroll-hint__arrow {
@@ -317,33 +319,33 @@ body {
 
 .mist--back {
   background:
-    radial-gradient(ellipse 100% 40% at 20% 90%, rgba(180, 170, 155, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 40% at 80% 85%, rgba(180, 170, 155, 0.06) 0%, transparent 50%);
-  animation: mistDrift 20s ease-in-out infinite alternate;
+    radial-gradient(ellipse 100% 50% at 20% 95%, rgba(180, 170, 155, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 50% at 80% 90%, rgba(180, 170, 155, 0.1) 0%, transparent 50%);
+  animation: mistDrift 30s ease-in-out infinite alternate;
 }
 
 .mist--mid {
   background:
-    radial-gradient(ellipse 80% 30% at 50% 95%, rgba(200, 190, 175, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 25% at 30% 100%, rgba(180, 170, 155, 0.1) 0%, transparent 50%);
-  animation: mistDrift 15s ease-in-out infinite alternate-reverse;
+    radial-gradient(ellipse 90% 40% at 50% 100%, rgba(200, 190, 175, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 35% at 25% 95%, rgba(180, 170, 155, 0.14) 0%, transparent 50%);
+  animation: mistDrift 24s ease-in-out infinite alternate-reverse;
 }
 
 .mist--front {
   background:
-    radial-gradient(ellipse 120% 35% at 50% 100%, rgba(200, 190, 175, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 20% at 70% 95%, rgba(220, 210, 195, 0.1) 0%, transparent 40%);
-  animation: mistDrift 12s ease-in-out infinite alternate;
+    radial-gradient(ellipse 130% 45% at 50% 105%, rgba(200, 190, 175, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 30% at 75% 100%, rgba(220, 210, 195, 0.15) 0%, transparent 40%);
+  animation: mistDrift 18s ease-in-out infinite alternate;
   z-index: 5;
 }
 
 @keyframes mistDrift {
   0% {
-    transform: translateX(-3%) translateY(0);
-    opacity: 0.8;
+    transform: translateX(-2%) translateY(0);
+    opacity: 0.85;
   }
   100% {
-    transform: translateX(3%) translateY(-2%);
+    transform: translateX(2%) translateY(-1%);
     opacity: 1;
   }
 }
@@ -468,6 +470,8 @@ body {
   color: var(--color-text);
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
+  position: relative;
+  z-index: 101;
 }
 
 .film-link:hover {
@@ -501,6 +505,8 @@ body {
   font-size: 0.95rem;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 101;
 }
 
 .watch-btn:hover {

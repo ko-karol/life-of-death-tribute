@@ -218,29 +218,35 @@ function initAnimations() {
 }
 
 function initHeroAnimation() {
-  const heroTl = gsap.timeline({ delay: 0.5 });
+  const heroTl = gsap.timeline({ delay: 1.2 });
 
   heroTl
-    // Title lines emerge from mist
+    // Title lines emerge from mist - slow, contemplative
     .to('.hero__title-line', {
       opacity: 1,
       y: 0,
-      duration: 1.8,
-      stagger: 0.4,
-      ease: 'power3.out'
+      duration: 2.4,
+      stagger: 0.7,
+      ease: 'power2.out'
     })
-    // Subtitle fades in
+    // Subtitle fades in after title settles
     .to('.hero__subtitle', {
       opacity: 1,
-      duration: 1.5,
-      ease: 'power2.out'
-    }, '-=0.8')
-    // Death silhouette starts to emerge
-    .to('.silhouette--death-hero', {
-      opacity: 0.5,
-      duration: 3,
+      duration: 2,
       ease: 'power1.out'
-    }, '-=1.5');
+    }, '-=0.5')
+    // Death silhouette emerges very slowly
+    .to('.silhouette--death-hero', {
+      opacity: 0.35,
+      duration: 4,
+      ease: 'power1.out'
+    }, '-=3')
+    // Scroll hint appears last
+    .to('.scroll-hint', {
+      opacity: 1,
+      duration: 1.5,
+      ease: 'power1.out'
+    }, '-=1');
 }
 
 function initSilhouetteAnimations() {
