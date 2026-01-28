@@ -212,6 +212,134 @@ body {
   }
 }
 
+/* Hero Section */
+.hero {
+  background: #0a0908;
+  overflow: hidden;
+}
+
+.hero__background {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, #1a1510 0%, #0a0908 70%);
+}
+
+/* Cinematic Letterbox (persistent) */
+.letterbox {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  background: #000;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.letterbox--top {
+  top: 0;
+}
+
+.letterbox--bottom {
+  bottom: 0;
+}
+
+/* Mist layers */
+.mist {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mist--back {
+  background:
+    radial-gradient(ellipse 100% 40% at 20% 90%, rgba(180, 170, 155, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 40% at 80% 85%, rgba(180, 170, 155, 0.06) 0%, transparent 50%);
+  animation: mistDrift 20s ease-in-out infinite alternate;
+}
+
+.mist--mid {
+  background:
+    radial-gradient(ellipse 80% 30% at 50% 95%, rgba(200, 190, 175, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 25% at 30% 100%, rgba(180, 170, 155, 0.1) 0%, transparent 50%);
+  animation: mistDrift 15s ease-in-out infinite alternate-reverse;
+}
+
+.mist--front {
+  background:
+    radial-gradient(ellipse 120% 35% at 50% 100%, rgba(200, 190, 175, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 20% at 70% 95%, rgba(220, 210, 195, 0.1) 0%, transparent 40%);
+  animation: mistDrift 12s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+@keyframes mistDrift {
+  0% {
+    transform: translateX(-3%) translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(3%) translateY(-2%);
+    opacity: 1;
+  }
+}
+
+/* Hero Death Silhouette */
+.silhouette--death-hero {
+  position: absolute;
+  bottom: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: auto;
+  z-index: 2;
+  opacity: 0;
+}
+
+/* Hero Content */
+.hero__content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero__title {
+  font-size: clamp(2rem, 10vw, 6rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+.hero__title-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero__title-line--of {
+  font-size: 0.4em;
+  font-style: italic;
+  letter-spacing: 0.3em;
+  color: var(--color-text-muted);
+  margin: 0.5em 0;
+}
+
+.hero__subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  opacity: 0;
+}
+
+/* Scroll hint repositioned for letterbox */
+.scroll-hint {
+  bottom: calc(12vh + 1.5rem);
+  z-index: 25;
+}
+
 /* Scene Backgrounds */
 .scene--opening {
   background: linear-gradient(135deg, var(--color-bg-dark) 0%, #252019 100%);

@@ -84,36 +84,30 @@ if (particleCanvas) {
 
 // Initialize animations
 function initAnimations() {
-  // Opening scene animations
-  const openingTl = gsap.timeline({
+  // Hero reveal animation
+  initHeroAnimation();
+
+  // Fade out hero on scroll
+  gsap.to('.hero__content', {
+    opacity: 0,
+    y: -80,
     scrollTrigger: {
-      trigger: '.scene--opening',
-      start: 'top top',
-      end: 'bottom center',
-      scrub: false,
+      trigger: '.hero',
+      start: '20% top',
+      end: '80% top',
+      scrub: true,
     }
   });
 
-  openingTl
-    .to('.title', {
-      opacity: 1,
-      duration: 1.5,
-      ease: 'power2.out'
-    })
-    .to('.subtitle', {
-      opacity: 1,
-      duration: 1.5,
-      ease: 'power2.out'
-    }, '-=1');
 
-  // Fade out opening on scroll
-  gsap.to('.scene--opening .scene__content', {
-    opacity: 0,
-    y: -50,
+  // Death silhouette reveal and parallax
+  gsap.to('.silhouette--death-hero', {
+    opacity: 1,
+    y: -30,
     scrollTrigger: {
-      trigger: '.scene--opening',
-      start: 'center center',
-      end: 'bottom top',
+      trigger: '.hero',
+      start: 'top top',
+      end: '60% top',
       scrub: true,
     }
   });
@@ -223,18 +217,33 @@ function initAnimations() {
   initSilhouetteAnimations();
 }
 
+function initHeroAnimation() {
+  const heroTl = gsap.timeline({ delay: 0.5 });
+
+  heroTl
+    // Title lines emerge from mist
+    .to('.hero__title-line', {
+      opacity: 1,
+      y: 0,
+      duration: 1.8,
+      stagger: 0.4,
+      ease: 'power3.out'
+    })
+    // Subtitle fades in
+    .to('.hero__subtitle', {
+      opacity: 1,
+      duration: 1.5,
+      ease: 'power2.out'
+    }, '-=0.8')
+    // Death silhouette starts to emerge
+    .to('.silhouette--death-hero', {
+      opacity: 0.5,
+      duration: 3,
+      ease: 'power1.out'
+    }, '-=1.5');
+}
+
 function initSilhouetteAnimations() {
-  // Opening - Death emerges from mist
-  gsap.to('.silhouette--death-distant', {
-    opacity: 1,
-    y: -20,
-    scrollTrigger: {
-      trigger: '.scene--opening',
-      start: 'top top',
-      end: 'center top',
-      scrub: true,
-    }
-  });
 
   // Encounter - Deer and Death parallax
   gsap.from('.silhouette--deer', {

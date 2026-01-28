@@ -10,6 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Cinematic Letterbox (persistent) -->
+  <div class="letterbox letterbox--top"></div>
+  <div class="letterbox letterbox--bottom"></div>
+
   <canvas id="particles"></canvas>
 
   <!-- Audio Toggle -->
@@ -27,29 +31,41 @@
   </button>
   <div class="scroll-container">
 
-    <!-- Section 1: Opening -->
-    <section class="scene scene--opening" data-scene="opening">
-      <div class="scene__background"></div>
+    <!-- Section 1: Opening / Hero -->
+    <section class="scene scene--opening hero" data-scene="opening">
+      <div class="hero__background"></div>
+
+      <!-- Mist layers -->
+      <div class="mist mist--back"></div>
+      <div class="mist mist--mid"></div>
 
       <!-- Death silhouette in mist -->
-      <svg class="silhouette silhouette--death-distant" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
+      <svg class="silhouette silhouette--death-hero" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
         <defs>
           <linearGradient id="deathFade" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stop-color="currentColor" stop-opacity="0"/>
-            <stop offset="40%" stop-color="currentColor" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0.25"/>
+            <stop offset="30%" stop-color="currentColor" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0.18"/>
           </linearGradient>
         </defs>
         <path fill="url(#deathFade)" d="M100 80 C85 80 75 95 75 110 C75 125 85 135 95 140 L90 180 C60 200 40 280 45 400 L155 400 C160 280 140 200 110 180 L105 140 C115 135 125 125 125 110 C125 95 115 80 100 80"/>
       </svg>
 
-      <div class="scene__content">
-        <h1 class="title">The Life of Death</h1>
-        <p class="subtitle">A tribute to Marsha Onderstijn's meditation on mortality</p>
-        <div class="scroll-hint">
-          <span>Scroll to begin</span>
-          <div class="scroll-hint__arrow"></div>
-        </div>
+      <!-- Front mist (over death) -->
+      <div class="mist mist--front"></div>
+
+      <div class="hero__content">
+        <h1 class="hero__title">
+          <span class="hero__title-line">The Life</span>
+          <span class="hero__title-line hero__title-line--of">of</span>
+          <span class="hero__title-line">Death</span>
+        </h1>
+        <p class="hero__subtitle">A tribute to Marsha Onderstijn</p>
+      </div>
+
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-hint__arrow"></div>
       </div>
     </section>
 
